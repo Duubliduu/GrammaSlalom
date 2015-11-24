@@ -1,43 +1,59 @@
 var Player = require('../entities/player');
+var Gramma = require('../entities/gramma');
 
 var Game = function () {
-  this.testentity = null;
+    this.runner = null;
+    this.land = null;
 };
 
 module.exports = Game;
 
 Game.prototype = {
 
-  create: function () {
-    var x = (this.game.width / 2) - 100;
-    var y = (this.game.height / 2) - 50;
+    create: function () {
 
-    this.testentity = new Player(this.game, x, y);
-    this.testentity.anchor.setTo(0.5, 0.5);
+        this.world.setBounds(-1000, -1000, 2000, 2000);
 
-    this.input.onDown.add(this.onInputDown, this);
-  },
+        this.physics.startSystem(Phaser.Physics.ARCADE);
 
-  update: function () {
-    var x, y, cx, cy, dx, dy, angle, scale;
+        this.land = this.add.tileSprite(0, 0, 800, 600, 'floortile');
+        this.land.scale.set(2);
+        this.land.smoothed = false;
+        this.land.fixedToCamera = true;
 
-    x = this.input.position.x;
-    y = this.input.position.y;
-    cx = this.world.centerX;
-    cy = this.world.centerY;
+        this.runner = new Player(this.game, 0, 0);
+        this.gramma = new Gramma(this.game, 0, 100);
 
-    angle = Math.atan2(y - cy, x - cx) * (180 / Math.PI);
-    this.testentity.angle = angle;
+        this.camera.follow(this.runner);
+        // this.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
+        this.camera.focusOnXY(0, 0);
+    },
 
-    dx = x - cx;
-    dy = y - cy;
-    scale = Math.sqrt(dx * dx + dy * dy) / 100;
+    update: function () {
 
-    this.testentity.scale.x = scale * 0.6;
-    this.testentity.scale.y = scale * 0.6;
-  },
+        this.physics.arcade.collide(this.runner, this.gramma);
 
-  onInputDown: function () {
-    this.game.state.start('Menu');
-  }
+        // Key press to right
+        if (this.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+            this.runner.position.x += 10;
+        }
+
+        // Key press to left
+        if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+            this.runner.position.x -= 10;
+        }
+
+        // the ammount is halved due to scaling
+        this.land.tilePosition.x = -this.camera.x / 2;
+        this.land.tilePosition.y = -this.camera.y / 2;
+    },
+
+    render: function () {
+
+        //this.game.debug.bodyInfo(this.runner, 32, 32);
+        //this.game.debug.bodyInfo(this.gramma, 32, 32);
+        //this.game.debug.body(this.runner, 32, 32);
+        //this.game.debug.body(this.gramma, 32, 32);
+
+    }
 };

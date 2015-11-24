@@ -1,5 +1,5 @@
-var Player = function (game, x, y) {
-    Phaser.Sprite.call(this, game, x, y, 'runner');
+var Gramma = function (game, x, y) {
+    Phaser.Sprite.call(this, game, x, y, 'gramma');
     game.add.existing(this);
     game.physics.enable(this, Phaser.Physics.ARCADE);
     this.anchor.setTo(0.5, 0.5);
@@ -7,20 +7,21 @@ var Player = function (game, x, y) {
     this.smoothed = false;
     this.animations.add('run');
     this.animations.play('run', 10, true);
+    this.body.immovable = true;
     this.body.bounce.setTo(1,1);
-    this.body.setSize(18,36,3,0);
-};
+    this.body.setSize(12,36,4,0);
+}
 
-Player.prototype = Object.create(Phaser.Sprite.prototype);
-Player.prototype.constructor = Player;
+Gramma.prototype = Object.create(Phaser.Sprite.prototype);
+Gramma.prototype.constructor = Gramma;
 
 /**
  * Automatically called by World.update
  */
-Player.prototype.update = function () {
+Gramma.prototype.update = function () {
 
     // Add speed to runner
-    this.body.velocity.y+=1;
+    // this.body.velocity.y+=1;
 };
 
-module.exports = Player;
+module.exports = Gramma;
