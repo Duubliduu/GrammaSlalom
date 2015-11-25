@@ -7,9 +7,11 @@ var Gramma = function (game, x, y) {
     this.smoothed = false;
     this.animations.add('run');
     this.animations.play('run', 10, true);
-    this.body.immovable = true;
-    this.body.bounce.setTo(1,1);
-    this.body.setSize(12,36,4,0);
+    this.body.bounce.setTo(1, 1);
+    this.body.setSize(12, 10, 4, 26);
+    this.body.mass = .5;
+    this.body.collideWorldBounds = false;
+    this.direction = Math.round(Math.random() * 1);
 }
 
 Gramma.prototype = Object.create(Phaser.Sprite.prototype);
@@ -21,7 +23,13 @@ Gramma.prototype.constructor = Gramma;
 Gramma.prototype.update = function () {
 
     // Add speed to runner
-    // this.body.velocity.y+=1;
+    this.body.velocity.y = Math.random() * 100;
+
+    if (this.direction == 1) {
+        this.body.velocity.x = Math.random() * 10;
+    } else {
+        this.body.velocity.x = Math.random() * -10;
+    }
 };
 
 module.exports = Gramma;
