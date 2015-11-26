@@ -11,6 +11,7 @@ var Gramma = function (game, x, y) {
     this.body.setSize(12, 10, 4, 26);
     this.body.mass = .5;
     this.body.collideWorldBounds = false;
+    this.checkWorldBounds = true;
     this.direction = Math.round(Math.random() * 1);
 }
 
@@ -22,13 +23,18 @@ Gramma.prototype.constructor = Gramma;
  */
 Gramma.prototype.update = function () {
 
-    // Add speed to runner
+    // Add speed to gramma
     this.body.velocity.y = Math.random() * 100;
 
     if (this.direction == 1) {
         this.body.velocity.x = Math.random() * 10;
     } else {
         this.body.velocity.x = Math.random() * -10;
+    }
+
+    // Remove the gramma when it leaves the screen
+    if (this.position.y < this.game.camera.y) {
+        this.kill();
     }
 };
 

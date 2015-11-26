@@ -7,12 +7,12 @@ module.exports = Menu;
 Menu.prototype = {
 
     create: function () {
-        var x = this.game.width / 2;
-        var y = this.game.height / 2;
+        var style = {font: "24px Arial", fill: "#ffffff", align: "center"},
+            text = this.add.text(this.world.centerX, 200, "Press to Start", style);
 
-        var style = {font: "65px Arial", fill: "#ffffff", align: "center"};
+        this.stage.backgroundColor = "#000000";
 
-        this.text = this.add.text(x - 300, y - 200, "Press to Start", style);
+        text.anchor.set(0.5, 0);
 
         this.input.onDown.add(this.onDown, this);
     },
@@ -22,5 +22,6 @@ Menu.prototype = {
 
     onDown: function () {
         this.game.state.start(playerState.currentLevel);
+        // this.game.state.start('Win');
     }
 };

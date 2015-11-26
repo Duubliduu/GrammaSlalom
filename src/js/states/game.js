@@ -6,6 +6,8 @@ var Game = function () {
     this.land = null;
     this.grammas = null;
     this.nextGramma = 640;
+    this.timer = 0;
+    this.stageLength = 60 * 300;
 };
 
 module.exports = Game;
@@ -14,9 +16,7 @@ Game.prototype = {
 
     create: function () {
 
-        var stageLength = 100;
-
-        this.world.setBounds(0, 0, 360, 640 * stageLength);
+        this.world.setBounds(0, 0, 360, this.stageLength);
 
         this.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -25,15 +25,24 @@ Game.prototype = {
         this.land.smoothed = false;
         this.land.fixedToCamera = true;
 
-        this.runner = new Player(this.game, 360/2, 0);
+        this.runner = new Player(this.game, 360/2, 200);
         this.grammas = this.add.group();
 
         this.camera.follow(this.runner);
 
         this.time.events.add(Phaser.Timer.SECOND * 60, this.endGame, this);
+
+        this.timer = this.game.add.text(this.world.centerX, 0, "60");
+        this.timer.fixedToCamera = true;
+        this.timer.anchor.set(0.5, 0);
     },
 
     update: function () {
+
+        var timeLeft = Math.floor(this.time.events.duration / 1000);
+        var distanceLeft = this.stageLength - this.camera.y - 640;
+
+        this.timer.setText(timeLeft + ' || ' + distanceLeft);
 
         this.physics.arcade.collide(this.runner, this.grammas);
 
@@ -57,6 +66,10 @@ Game.prototype = {
         if (this.camera.y > this.nextGramma) {
             this.addGramma();
         }
+
+        if (distanceLeft == 0) {
+            this.endGame(true);
+        }
     },
 
     render: function () {
@@ -66,23 +79,32 @@ Game.prototype = {
 
     },
 
-    collisionHandler: function (runner, grammas) {
-        runner.body.velocity.y = 0;
-    },
-
     addGramma: function () {
         var gramma = new Gramma(
             this.game,
             this.runner.x + (90 - (Math.random() * 180)),
             this.camera.y + 640
         );
-        
+
         // this.game.debug.body(gramma);
         this.grammas.add(gramma);
         this.nextGramma+= 640;
     },
 
-    endGame: function () {
+    outBounds: function () {
+        console.log('out');
+        // this.endGame(true)
+    },
 
+    endGame: function (win) {
+        var score = 0;
+
+        if (win) {
+            this.game.state.start('Win');
+            score = this.time.events.duration;
+            window.playerState.scores.push(score);
+        } else {
+            this.game.state.start('Lose');
+        }
     }
 };
