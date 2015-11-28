@@ -14,8 +14,8 @@ Preloader.prototype = {
         this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
         this.load.setPreloadSprite(this.asset);
         this.load.image('floortile', 'assets/floortile.png');
-        this.load.spritesheet('runner', 'assets/runner.png', 36, 36);
-        this.load.spritesheet('gramma', 'assets/gramma.png', 36, 36);
+        this.load.spritesheet('runner', 'assets/runner.png', 120, 120);
+        this.load.spritesheet('gramma', 'assets/gramma.png', 120, 120);
 
     },
 
